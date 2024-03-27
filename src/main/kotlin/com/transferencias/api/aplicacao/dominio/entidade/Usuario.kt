@@ -1,4 +1,4 @@
-package com.transferencias.api.aplicacao.dominio.usuario
+package com.transferencias.api.aplicacao.dominio.entidade
 
 import jakarta.persistence.*
 import java.math.BigDecimal
@@ -32,9 +32,16 @@ class Usuario(
     class Carteira {
         private var dinheiro: BigDecimal = BigDecimal.ZERO
         fun getSaldoAtual(): BigDecimal = dinheiro
-        fun Usuario.adicionaSaldo(valorTransacao: BigDecimal) {
-            this@Carteira.dinheiro.add(valorTransacao)
+        fun adicionaSaldo(valorTransacao: BigDecimal) {
+            if (valorTransacao > BigDecimal.ZERO) this.dinheiro.add(valorTransacao)
+            // TODO: atualizar a exceção
+            else throw RuntimeException()
+        }
 
+        fun subtraiSaldo(valorTransacao: BigDecimal) {
+            if (valorTransacao <= dinheiro && valorTransacao > BigDecimal.ZERO) this.dinheiro.minus(valorTransacao)
+            // TODO: atualizar a exceção
+            else throw RuntimeException()
         }
     }
 }
