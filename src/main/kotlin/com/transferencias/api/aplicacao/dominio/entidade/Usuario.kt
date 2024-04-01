@@ -1,4 +1,4 @@
-package com.transferencias.api.aplicacao.dominio.usuario
+package com.transferencias.api.aplicacao.dominio.entidade
 
 import jakarta.persistence.*
 import java.math.BigDecimal
@@ -18,6 +18,7 @@ class Usuario(
     @Embedded
     var carteira: Carteira
 ) {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false)
@@ -31,10 +32,13 @@ class Usuario(
     @Embeddable
     class Carteira {
         private var dinheiro: BigDecimal = BigDecimal.ZERO
-        fun getSaldoAtual(): BigDecimal = dinheiro
-        fun Usuario.adicionaSaldo(valorTransacao: BigDecimal) {
-            this@Carteira.dinheiro.add(valorTransacao)
+        fun getSaldoAtual() = dinheiro
+        fun adicionaSaldo(valorTransacao: BigDecimal) = this.let {
+            it.dinheiro = it.dinheiro.add(valorTransacao); it
+        }
 
+        fun subtraiSaldo(valorTransacao: BigDecimal) = this.let {
+            it.dinheiro = it.dinheiro.minus(valorTransacao); it
         }
     }
 }
