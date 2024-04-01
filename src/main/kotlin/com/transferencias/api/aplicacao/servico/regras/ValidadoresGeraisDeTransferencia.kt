@@ -2,15 +2,15 @@ package com.transferencias.api.aplicacao.servico.regras
 
 import com.transferencias.api.aplicacao.dominio.DadosDestino
 import com.transferencias.api.aplicacao.dominio.DadosOrigem
+import com.transferencias.api.auxiliares.excecoes.SaldoInsuficienteException
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 
 @Service
-class RegrasGeraisDeTransferencia {
+class ValidadoresGeraisDeTransferencia {
     fun validaSolicitacao(operadores: Pair<DadosOrigem, DadosDestino>) {
         val (dadosOrigem, _) = operadores
-        // TODO: atualizar a exceção
-        if (!dadosOrigem.temSaldoSuficiente()) throw RuntimeException()
+        if (!dadosOrigem.temSaldoSuficiente()) throw SaldoInsuficienteException()
     }
 
     fun valorTotalDaTransacao(operadores: Pair<DadosOrigem, DadosDestino>): BigDecimal {

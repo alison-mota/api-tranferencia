@@ -1,7 +1,7 @@
 package com.transferencias.api.auxiliares.interceptador
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException
-import com.fasterxml.jackson.databind.exc.MismatchedInputException
+import com.transferencias.api.auxiliares.excecoes.SaldoInsuficienteException
+import com.transferencias.api.auxiliares.excecoes.UsuarioNaoPermitidoException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,7 +14,6 @@ import org.springframework.validation.ObjectError
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import org.springframework.web.client.HttpClientErrorException.BadRequest
 
 @RestControllerAdvice
 class ValidationErrorHandler {
@@ -24,9 +23,9 @@ class ValidationErrorHandler {
 
     private val log: Logger = LoggerFactory.getLogger(ValidationErrorHandler::class.java)
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(BadRequest::class)
-    fun handleGenericException(exception: BadRequest): ValidationErrorsOutputDto {
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(SaldoInsuficienteException::class)
+    fun handleGenericException(exception: SaldoInsuficienteException): ValidationErrorsOutputDto {
         val validationErrors = ValidationErrorsOutputDto()
         validationErrors.addError(exception.message)
 
@@ -42,6 +41,15 @@ class ValidationErrorHandler {
         val fieldErrors = emptyList<FieldError>()
 
         return buildValidationErrors(globalErrors, fieldErrors)
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(UsuarioNaoPermitidoException::class)
+    fun handleGenericException(exception: UsuarioNaoPermitidoException): ValidationErrorsOutputDto {
+        val validationErrors = ValidationErrorsOutputDto()
+        validationErrors.addError(exception.message)
+
+        return validationErrors
     }
 
     private fun buildValidationErrors(

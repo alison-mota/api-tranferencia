@@ -18,6 +18,7 @@ class Usuario(
     @Embedded
     var carteira: Carteira
 ) {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false)

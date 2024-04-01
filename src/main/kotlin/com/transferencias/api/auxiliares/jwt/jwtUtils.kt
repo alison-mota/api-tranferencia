@@ -15,7 +15,6 @@ import java.util.*
 class JwtUtils(
     @Value("\${segredos.jwtSecret}") internal val jwtSecret: String,
 ) {
-    private val logger = LoggerFactory.getLogger(this::class.java)
     internal val signingKey = Base64.getDecoder().decode(jwtSecret)
 
     fun extrairUsuarioId(token: String): String {
@@ -32,7 +31,7 @@ class JwtUtils(
         }
     }
 
-    fun generateToken(secretKey: String, usuarioId: Long = 1): String {
+    fun generateToken(secretKey: String, usuarioId: Long): String {
         val claims = Jwts.claims()
             .setSubject("api-transferencia")
             .add("usuario_id", usuarioId)
@@ -55,11 +54,11 @@ class GeradorDeToken(
 
     @GetMapping("/{usuario_id}")
     fun gerar(
-        @PathVariable("usuario_id") usuarioId: String
+        @PathVariable("usuario_id") usuarioId: Long
     ): LoginResult {
         logger.info("[START - 01] Gerando token para o id $usuarioId")
 
-        return LoginResult(jwtUtils.generateToken(jwtUtils.jwtSecret))
+        return LoginResult(jwtUtils.generateToken(jwtUtils.jwtSecret, usuarioId))
             .also {
                 logger.info("[END - 01] Token gerado")
             }

@@ -8,7 +8,7 @@ data class DadosOrigem(
     val valorDaTransferencia: BigDecimal
 ) {
     val operador: Operador = Operador.ORIGEM
-    fun temSaldoSuficiente(): Boolean = valorDaTransferencia >= usuario.carteira.getSaldoAtual()
+    fun temSaldoSuficiente(): Boolean = usuario.carteira.getSaldoAtual() >= valorDaTransferencia
 }
 
 data class DadosDestino(
