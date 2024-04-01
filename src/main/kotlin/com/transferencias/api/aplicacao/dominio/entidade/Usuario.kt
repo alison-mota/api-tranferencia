@@ -32,17 +32,13 @@ class Usuario(
     @Embeddable
     class Carteira {
         private var dinheiro: BigDecimal = BigDecimal.ZERO
-        fun getSaldoAtual(): BigDecimal = dinheiro
-        fun adicionaSaldo(valorTransacao: BigDecimal) {
-            if (valorTransacao > BigDecimal.ZERO) this.dinheiro.add(valorTransacao)
-            // TODO: atualizar a exceção
-            else throw RuntimeException()
+        fun getSaldoAtual() = dinheiro
+        fun adicionaSaldo(valorTransacao: BigDecimal) = this.let {
+            it.dinheiro = it.dinheiro.add(valorTransacao); it
         }
 
-        fun subtraiSaldo(valorTransacao: BigDecimal) {
-            if (valorTransacao <= dinheiro && valorTransacao > BigDecimal.ZERO) this.dinheiro.minus(valorTransacao)
-            // TODO: atualizar a exceção
-            else throw RuntimeException()
+        fun subtraiSaldo(valorTransacao: BigDecimal) = this.let {
+            it.dinheiro = it.dinheiro.minus(valorTransacao); it
         }
     }
 }

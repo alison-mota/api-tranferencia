@@ -1,7 +1,8 @@
-package com.transferencias.api.aplicacao.servico.regras
+package com.transferencias.api.aplicacao.servico.regras.gerais
 
 import com.transferencias.api.aplicacao.dominio.DadosDestino
 import com.transferencias.api.aplicacao.dominio.DadosOrigem
+import com.transferencias.api.auxiliares.excecoes.BusinessException
 import com.transferencias.api.auxiliares.excecoes.SaldoInsuficienteException
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
@@ -10,7 +11,10 @@ import java.math.BigDecimal
 class ValidadoresGeraisDeTransferencia {
     fun validaSolicitacao(operadores: Pair<DadosOrigem, DadosDestino>) {
         val (dadosOrigem, _) = operadores
+        val (_, dadosDestino) = operadores
+
         if (!dadosOrigem.temSaldoSuficiente()) throw SaldoInsuficienteException()
+        if(dadosOrigem.usuario.id == dadosDestino.usuario.id) throw BusinessException("Usuário de origem e usuário de destino são iguais")
     }
 
     fun valorTotalDaTransacao(operadores: Pair<DadosOrigem, DadosDestino>): BigDecimal {

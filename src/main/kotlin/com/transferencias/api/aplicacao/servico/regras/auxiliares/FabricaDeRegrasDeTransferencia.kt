@@ -1,4 +1,4 @@
-package com.transferencias.api.aplicacao.servico.regras
+package com.transferencias.api.aplicacao.servico.regras.auxiliares
 
 import com.transferencias.api.aplicacao.servico.contratos.RegraDeTransferencia
 import org.springframework.stereotype.Component

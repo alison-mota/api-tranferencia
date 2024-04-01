@@ -1,5 +1,6 @@
 package com.transferencias.api.auxiliares.jwt
 
+import com.transferencias.api.auxiliares.excecoes.TokenInvalidoException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.slf4j.LoggerFactory
@@ -16,8 +17,10 @@ class JwtUtils(
     @Value("\${segredos.jwtSecret}") internal val jwtSecret: String,
 ) {
     internal val signingKey = Base64.getDecoder().decode(jwtSecret)
+    private val logger = LoggerFactory.getLogger(this::class.java)
 
     fun extrairUsuarioId(token: String): String {
+        logger.info("[START - 03] Extraindo usuario_id do token")
         return try {
             Jwts.parser()
                 .setSigningKey(signingKey)
@@ -25,20 +28,22 @@ class JwtUtils(
                 .parseClaimsJws(limpaToken(token))
                 .body["usuario_id"]
                 .toString()
+                .also {
+                    logger.info("[END - 03] Usuario_id extraído do token: $this")
+                }
         } catch (ex: Exception) {
-            // TODO: trocar exception
-            throw RuntimeException()
+            throw TokenInvalidoException()
         }
     }
 
-    fun generateToken(secretKey: String, usuarioId: Long): String {
+    fun generateToken(usuarioId: Long): String {
         val claims = Jwts.claims()
             .setSubject("api-transferencia")
             .add("usuario_id", usuarioId)
             .build()
         return Jwts.builder()
             .setClaims(claims)
-            .signWith(SignatureAlgorithm.HS256, secretKey)
+            .signWith(SignatureAlgorithm.HS256, jwtSecret)
             .compact()
     }
 
@@ -58,7 +63,7 @@ class GeradorDeToken(
     ): LoginResult {
         logger.info("[START - 01] Gerando token para o id $usuarioId")
 
-        return LoginResult(jwtUtils.generateToken(jwtUtils.jwtSecret, usuarioId))
+        return LoginResult(jwtUtils.generateToken(usuarioId))
             .also {
                 logger.info("[END - 01] Token gerado")
             }
