@@ -1,6 +1,7 @@
 package com.transferencias.api.aplicacao.adaptador.entrada.controller
 
 import com.transferencias.api.aplicacao.adaptador.entrada.dto.TransferenciaRequest
+import com.transferencias.api.aplicacao.adaptador.saida.email.servico.ApiParaEnvioDeEmail
 import com.transferencias.api.aplicacao.servico.OrquestradorDeTransferencias
 import com.transferencias.api.aplicacao.servico.auxiliares.LocalizadorDeUsuarios
 import jakarta.validation.Valid
@@ -11,8 +12,9 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/usuario")
 class TransferenciaController(
-    private val orquestradorDeTransferencias: OrquestradorDeTransferencias,
-    private val localizadorDeUsuarios: LocalizadorDeUsuarios
+    private val orquestrador: OrquestradorDeTransferencias,
+    private val localizadorDeUsuarios: LocalizadorDeUsuarios,
+    private val enviaEmail: ApiParaEnvioDeEmail
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
@@ -23,7 +25,9 @@ class TransferenciaController(
     ): ResponseEntity<Any> {
         logger.info("[START - 01] Iniciando transferencia entre contas")
 
-        orquestradorDeTransferencias.transferirValor(localizadorDeUsuarios.executa(transferenciaRequest, authorization))
+        val dadosIniciaisDaOperacao = localizadorDeUsuarios.executa(transferenciaRequest, authorization)
+        orquestrador.transferirValor(dadosIniciaisDaOperacao)
+        enviaEmail.envia()
 
         return ResponseEntity.ok()
             .build<Any?>()

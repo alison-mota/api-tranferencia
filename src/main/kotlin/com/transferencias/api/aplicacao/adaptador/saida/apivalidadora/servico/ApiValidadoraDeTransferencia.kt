@@ -1,4 +1,4 @@
-package com.transferencias.api.aplicacao.adaptador.saida.apivalidadora.controller
+package com.transferencias.api.aplicacao.adaptador.saida.apivalidadora.servico
 
 import com.transferencias.api.aplicacao.adaptador.saida.apivalidadora.api.ApiValidadora
 import com.transferencias.api.aplicacao.adaptador.saida.apivalidadora.dto.ApiValidadoraResponse

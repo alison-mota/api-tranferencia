@@ -1,27 +1,28 @@
-package com.transferencias.api.aplicacao.adaptador.saida.apivalidadora.api
+package com.transferencias.api.aplicacao.adaptador.saida.email.api
 
-import com.transferencias.api.aplicacao.adaptador.saida.email.api.EnvioDeEmailProperties
 import feign.Logger
 import feign.Retryer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.cloud.openfeign.EnableFeignClients
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-@EnableConfigurationProperties(ApiValidadoraProperties::class)
-class ApiValidadoraConfig {
+@EnableConfigurationProperties(EnvioDeEmailProperties::class)
+@EnableFeignClients(basePackages = ["com.transferencias.api.aplicacao.adaptador.saida.email.api"])
+class EnvioDeEmailConfig {
 
     @Autowired
-    lateinit var apiValidadoraProperties: EnvioDeEmailProperties
+    lateinit var envioDeEmailProperties: EnvioDeEmailProperties
 
     @Bean
     fun retryer(): Retryer {
         return Retryer.Default(
-            apiValidadoraProperties.period,
-            apiValidadoraProperties.timeout,
-            apiValidadoraProperties.retryCount
+            envioDeEmailProperties.period,
+            envioDeEmailProperties.timeout,
+            envioDeEmailProperties.retryCount
         )
     }
 
@@ -32,8 +33,8 @@ class ApiValidadoraConfig {
 }
 
 
-@ConfigurationProperties(prefix = "feign.api-validadora.client")
-data class ApiValidadoraProperties(
+@ConfigurationProperties(prefix = "feign.api-email.client")
+data class EnvioDeEmailProperties(
     var period: Long,
     var timeout: Long,
     var retryCount: Int
