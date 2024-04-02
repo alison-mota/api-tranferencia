@@ -1,4 +1,4 @@
-package com.transferencias.api.aplicacao.adaptador.dto
+package com.transferencias.api.aplicacao.adaptador.entrada.dto
 
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Positive

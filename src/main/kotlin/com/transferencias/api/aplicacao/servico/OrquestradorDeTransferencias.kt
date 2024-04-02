@@ -12,21 +12,22 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class OrquestradorDeTransferencias(
     private val fabricaDeRegrasDeTransferencia: FabricaDeRegrasDeTransferencia,
-    private val validadoresGeraisDeTransferencia: ValidadoresGeraisDeTransferencia,
+    private val validadorDeTransacao: ValidadoresGeraisDeTransferencia,
     private val usuarioRepository: UsuarioRepository
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
     @Transactional
-    fun transferirValor(operadores: Pair<DadosOrigem, DadosDestino>) {
+    fun transferirValor(dadosIniciaisDaOperacao: Pair<DadosOrigem, DadosDestino>) {
         logger.info("[START - 04] Iniciando processo e validações para executar a transferencia entre contas")
-        validadoresGeraisDeTransferencia.validaSolicitacao(operadores)
+        validadorDeTransacao.validaSolicitacao(dadosIniciaisDaOperacao)
 
-        val (usuarioDeOrigem, _) = operadores
+        val (usuarioDeOrigem, _) = dadosIniciaisDaOperacao
         val operacaoRealizada = fabricaDeRegrasDeTransferencia.criaListaDeRegras
             .first { it.regraDeExecucao.name == usuarioDeOrigem.usuario.perfil.name }
-            .processaRegra(operadores)
+            .processaRegra(dadosIniciaisDaOperacao)
 
-        validadoresGeraisDeTransferencia.validaValorInicialEFinal(operadores, operacaoRealizada)
+        validadorDeTransacao.validacoesFinais(dadosIniciaisDaOperacao, operacaoRealizada)
+
         usuarioRepository.saveAll(listOf(operacaoRealizada.first.usuario, operacaoRealizada.second.usuario))
         logger.info("[END - 04] Transferencia entre contas realizada")
     }

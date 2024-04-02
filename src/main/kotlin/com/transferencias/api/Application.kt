@@ -2,11 +2,12 @@ package com.transferencias.api
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import org.springframework.web.servlet.config.annotation.EnableWebMvc
+import org.springframework.cloud.openfeign.EnableFeignClients
 
 @SpringBootApplication
-class ApiApplication
+@EnableFeignClients
+class Application
 
 fun main(args: Array<String>) {
-    runApplication<ApiApplication>(*args)
+    runApplication<Application>(*args)
 }

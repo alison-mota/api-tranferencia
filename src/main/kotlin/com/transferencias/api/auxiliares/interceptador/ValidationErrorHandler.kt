@@ -2,6 +2,7 @@ package com.transferencias.api.auxiliares.interceptador
 
 import com.transferencias.api.auxiliares.excecoes.BusinessException
 import com.transferencias.api.auxiliares.excecoes.SaldoInsuficienteException
+import com.transferencias.api.auxiliares.excecoes.ServicoIndisponivelException
 import com.transferencias.api.auxiliares.excecoes.UsuarioNaoPermitidoException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -56,6 +57,15 @@ class ValidationErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BusinessException::class)
     fun handleGenericException(exception: BusinessException): ValidationErrorsOutputDto {
+        val validationErrors = ValidationErrorsOutputDto()
+        validationErrors.addError(exception.message)
+
+        return validationErrors
+    }
+
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    @ExceptionHandler(ServicoIndisponivelException::class)
+    fun handleGenericException(exception: ServicoIndisponivelException): ValidationErrorsOutputDto {
         val validationErrors = ValidationErrorsOutputDto()
         validationErrors.addError(exception.message)
 
