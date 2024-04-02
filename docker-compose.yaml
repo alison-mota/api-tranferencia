@@ -1,0 +1,7 @@
+version: '3.7'
+
+services:
+  api-validadora-e-email:
+    image: api-validadora-e-email:2.0.0
+    ports:
+      - "8081:8081"
