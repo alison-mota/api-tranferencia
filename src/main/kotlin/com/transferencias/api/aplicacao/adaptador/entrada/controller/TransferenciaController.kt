@@ -1,6 +1,6 @@
-package com.transferencias.api.aplicacao.adaptador.controller
+package com.transferencias.api.aplicacao.adaptador.entrada.controller
 
-import com.transferencias.api.aplicacao.adaptador.dto.TransferenciaRequest
+import com.transferencias.api.aplicacao.adaptador.entrada.dto.TransferenciaRequest
 import com.transferencias.api.aplicacao.servico.OrquestradorDeTransferencias
 import com.transferencias.api.aplicacao.servico.auxiliares.LocalizadorDeUsuarios
 import jakarta.validation.Valid

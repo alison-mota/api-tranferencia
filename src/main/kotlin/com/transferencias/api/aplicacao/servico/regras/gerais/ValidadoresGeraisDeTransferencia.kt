@@ -1,20 +1,27 @@
 package com.transferencias.api.aplicacao.servico.regras.gerais
 
+import com.transferencias.api.aplicacao.adaptador.saida.apivalidadora.controller.ApiValidadoraDeTransferencia
+import com.transferencias.api.aplicacao.adaptador.saida.apivalidadora.dto.ApiValidadoraResponse
 import com.transferencias.api.aplicacao.dominio.DadosDestino
 import com.transferencias.api.aplicacao.dominio.DadosOrigem
 import com.transferencias.api.auxiliares.excecoes.BusinessException
 import com.transferencias.api.auxiliares.excecoes.SaldoInsuficienteException
+import com.transferencias.api.auxiliares.excecoes.ServicoIndisponivelException
+import com.transferencias.api.auxiliares.excecoes.UsuarioNaoAutorizadoException
 import org.springframework.stereotype.Service
+import org.springframework.web.client.HttpClientErrorException.BadRequest
 import java.math.BigDecimal
 
 @Service
-class ValidadoresGeraisDeTransferencia {
+class ValidadoresGeraisDeTransferencia(
+    private val apiValidadora: ApiValidadoraDeTransferencia
+) {
     fun validaSolicitacao(operadores: Pair<DadosOrigem, DadosDestino>) {
         val (dadosOrigem, _) = operadores
         val (_, dadosDestino) = operadores
 
         if (!dadosOrigem.temSaldoSuficiente()) throw SaldoInsuficienteException()
-        if(dadosOrigem.usuario.id == dadosDestino.usuario.id) throw BusinessException("Usuário de origem e usuário de destino são iguais")
+        if (dadosOrigem.usuario.id == dadosDestino.usuario.id) throw BusinessException("Usuário de origem e usuário de destino são iguais")
     }
 
     fun valorTotalDaTransacao(operadores: Pair<DadosOrigem, DadosDestino>): BigDecimal {
@@ -26,14 +33,36 @@ class ValidadoresGeraisDeTransferencia {
             .plus(dadosDestino.usuario.carteira.getSaldoAtual())
     }
 
-    /*
-        Este método soma todos os valores antes e depois e os compara para poder validar se houve fraudes sistêmicas.
-     */
-    fun validaValorInicialEFinal(
+    fun validacoesFinais(
         valorTransacaoInicial: Pair<DadosOrigem, DadosDestino>,
         operacaoRealizada: Pair<DadosOrigem, DadosDestino>
     ) {
-        // TODO: atualizar a exceção
-        if (valorTotalDaTransacao(valorTransacaoInicial) != valorTotalDaTransacao(operacaoRealizada)) throw RuntimeException()
+        validaValorInicialEFinal(valorTransacaoInicial, operacaoRealizada)
+        validacoesExternas()
+    }
+
+    private fun validaValorInicialEFinal(
+        valorTransacaoInicial: Pair<DadosOrigem, DadosDestino>,
+        operacaoRealizada: Pair<DadosOrigem, DadosDestino>
+    ) {
+        if (valorTotalDaTransacao(valorTransacaoInicial) != valorTotalDaTransacao(operacaoRealizada)) throw ServicoIndisponivelException(
+            "Houve um problema no processamento da transferência. Tente novamente mais tarde"
+        )
+    }
+
+    private fun validacoesExternas() {
+        val validadora: ApiValidadoraResponse?
+
+        try {
+            validadora = apiValidadora.valida()
+            when(validadora.podeTransferir) {
+                false -> throw UsuarioNaoAutorizadoException("Serviço não autorizado")
+                true -> return
+            }
+        } catch (ex: BadRequest) {
+            throw BusinessException()
+        } catch (ex: Exception) {
+            throw ex
+        }
     }
 }

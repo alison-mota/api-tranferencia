@@ -1,0 +1,7 @@
+version: '3.7'
+
+services:
+  api-validadora:
+    image: api-validadora
+    ports:
+      - "8081:8081"

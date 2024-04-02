@@ -1,8 +1,8 @@
 package com.transferencias.api.aplicacao.servico.auxiliares
 
-import com.transferencias.api.aplicacao.adaptador.dto.TransferenciaRequest
-import com.transferencias.api.aplicacao.adaptador.paraDestino
-import com.transferencias.api.aplicacao.adaptador.paraOrigem
+import com.transferencias.api.aplicacao.adaptador.entrada.dto.TransferenciaRequest
+import com.transferencias.api.aplicacao.adaptador.entrada.paraDestino
+import com.transferencias.api.aplicacao.adaptador.entrada.paraOrigem
 import com.transferencias.api.aplicacao.dominio.DadosDestino
 import com.transferencias.api.aplicacao.dominio.DadosOrigem
 import com.transferencias.api.aplicacao.dominio.repositorio.UsuarioRepository

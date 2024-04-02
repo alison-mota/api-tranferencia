@@ -12,3 +12,8 @@ class SaldoInsuficienteException(
 class UsuarioNaoPermitidoException(
     mensagem: String = "Esse perfil de usuário não pode realizar transferências"
 ) : RuntimeException(mensagem)
+
+@ResponseStatus(HttpStatus.UNAUTHORIZED)
+class UsuarioNaoAutorizadoException(
+    message: String = "Esse usuario não está autorizado a realizar essa transferência"
+) : RuntimeException(message)

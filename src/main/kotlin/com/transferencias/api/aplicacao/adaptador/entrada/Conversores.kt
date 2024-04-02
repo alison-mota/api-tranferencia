@@ -1,4 +1,4 @@
-package com.transferencias.api.aplicacao.adaptador
+package com.transferencias.api.aplicacao.adaptador.entrada
 
 import com.transferencias.api.aplicacao.dominio.DadosDestino
 import com.transferencias.api.aplicacao.dominio.DadosOrigem

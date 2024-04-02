@@ -29,7 +29,7 @@ class JwtUtils(
                 .body["usuario_id"]
                 .toString()
                 .also {
-                    logger.info("[END - 03] Usuario_id extraído do token: $this")
+                    logger.info("[END - 03] Usuario_id extraído do token: $it")
                 }
         } catch (ex: Exception) {
             throw TokenInvalidoException()
