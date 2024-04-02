@@ -1,18 +1,17 @@
 package com.transferencias.api.auxiliares.interceptador
 
 import com.transferencias.api.auxiliares.excecoes.*
-import feign.FeignException
 import feign.FeignException.BadRequest
 import feign.FeignException.InternalServerError
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.http.HttpStatus
 import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException
 import org.springframework.validation.FieldError
 import org.springframework.validation.ObjectError
+import org.springframework.web.bind.MissingRequestHeaderException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -22,8 +21,6 @@ class ValidationErrorHandler {
 
     @Autowired
     private lateinit var messageSource: MessageSource
-
-    private val log: Logger = LoggerFactory.getLogger(ValidationErrorHandler::class.java)
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(SaldoInsuficienteException::class)
@@ -37,8 +34,15 @@ class ValidationErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException::class)
     fun handleValidationError(exception: HttpMessageNotReadableException): ValidationErrorsOutputDto {
-        log.error("Problema para desserializar o objeto", exception)
+        val globalErrors = listOf(ObjectError("", exception.message))
+        val fieldErrors = emptyList<FieldError>()
 
+        return buildValidationErrors(globalErrors, fieldErrors)
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(JpaObjectRetrievalFailureException::class)
+    fun handleValidationError(exception: JpaObjectRetrievalFailureException): ValidationErrorsOutputDto {
         val globalErrors = listOf(ObjectError("", exception.message))
         val fieldErrors = emptyList<FieldError>()
 
@@ -48,6 +52,15 @@ class ValidationErrorHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(UsuarioNaoPermitidoException::class)
     fun handleGenericException(exception: UsuarioNaoPermitidoException): ValidationErrorsOutputDto {
+        val validationErrors = ValidationErrorsOutputDto()
+        validationErrors.addError(exception.message)
+
+        return validationErrors
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(TokenInvalidoException::class)
+    fun handleGenericException(exception: TokenInvalidoException): ValidationErrorsOutputDto {
         val validationErrors = ValidationErrorsOutputDto()
         validationErrors.addError(exception.message)
 
@@ -66,6 +79,15 @@ class ValidationErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BadRequest::class)
     fun handleGenericException(exception: BadRequest): ValidationErrorsOutputDto {
+        val validationErrors = ValidationErrorsOutputDto()
+        validationErrors.addError(exception.message)
+
+        return validationErrors
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MissingRequestHeaderException::class)
+    fun handleGenericException(exception: MissingRequestHeaderException): ValidationErrorsOutputDto {
         val validationErrors = ValidationErrorsOutputDto()
         validationErrors.addError(exception.message)
 
