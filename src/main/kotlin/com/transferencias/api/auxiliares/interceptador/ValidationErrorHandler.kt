@@ -1,9 +1,6 @@
 package com.transferencias.api.auxiliares.interceptador
 
-import com.transferencias.api.auxiliares.excecoes.BusinessException
-import com.transferencias.api.auxiliares.excecoes.SaldoInsuficienteException
-import com.transferencias.api.auxiliares.excecoes.ServicoIndisponivelException
-import com.transferencias.api.auxiliares.excecoes.UsuarioNaoPermitidoException
+import com.transferencias.api.auxiliares.excecoes.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -66,6 +63,15 @@ class ValidationErrorHandler {
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     @ExceptionHandler(ServicoIndisponivelException::class)
     fun handleGenericException(exception: ServicoIndisponivelException): ValidationErrorsOutputDto {
+        val validationErrors = ValidationErrorsOutputDto()
+        validationErrors.addError(exception.message)
+
+        return validationErrors
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(UsuarioNaoAutorizadoException::class)
+    fun handleGenericException(exception: UsuarioNaoAutorizadoException): ValidationErrorsOutputDto {
         val validationErrors = ValidationErrorsOutputDto()
         validationErrors.addError(exception.message)
 

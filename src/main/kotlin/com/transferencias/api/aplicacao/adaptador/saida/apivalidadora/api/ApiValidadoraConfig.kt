@@ -1,22 +1,33 @@
 package com.transferencias.api.aplicacao.adaptador.saida.apivalidadora.api
 
 import feign.Retryer
-import org.springframework.beans.factory.annotation.Value
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.bind.ConstructorBinding
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 
-const val PREFIX_CONFIG = "feign.api-validadora.client"
+@Configuration
+@EnableConfigurationProperties(ApiValidadoraProperties::class)
 class ApiValidadoraConfig {
+
+    @Autowired
+    lateinit var apiValidadoraProperties: ApiValidadoraProperties
+
     @Bean
-    fun retryer(apiValidadoraProperties: ApiValidadoraProperties): Retryer =
-        apiValidadoraProperties.run{
-            Retryer.Default(period, timeout, retryCount)
-        }
+    fun retryer(): Retryer {
+        return Retryer.Default(
+            apiValidadoraProperties.period,
+            apiValidadoraProperties.timeout,
+            apiValidadoraProperties.retryCount
+        )
+    }
 }
 
+
+@ConfigurationProperties(prefix = "feign.api-validadora.client")
 data class ApiValidadoraProperties(
-    @Value("\${$PREFIX_CONFIG.period}") val period: Long,
-    @Value("\${$PREFIX_CONFIG.timeout}")val timeout: Long,
-    @Value("\${$PREFIX_CONFIG.retry-count}")val retryCount: Int
+    var period: Long,
+    var timeout: Long,
+    var retryCount: Int
 )

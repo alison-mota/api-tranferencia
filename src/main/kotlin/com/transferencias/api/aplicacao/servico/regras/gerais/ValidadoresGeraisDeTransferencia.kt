@@ -45,8 +45,9 @@ class ValidadoresGeraisDeTransferencia(
         valorTransacaoInicial: Pair<DadosOrigem, DadosDestino>,
         operacaoRealizada: Pair<DadosOrigem, DadosDestino>
     ) {
-        // TODO: atualizar a exceção
-        if (valorTotalDaTransacao(valorTransacaoInicial) != valorTotalDaTransacao(operacaoRealizada)) throw RuntimeException()
+        if (valorTotalDaTransacao(valorTransacaoInicial) != valorTotalDaTransacao(operacaoRealizada)) throw ServicoIndisponivelException(
+            "Houve um problema no processamento da transferência. Tente novamente mais tarde"
+        )
     }
 
     private fun validacoesExternas() {
@@ -54,15 +55,14 @@ class ValidadoresGeraisDeTransferencia(
 
         try {
             validadora = apiValidadora.valida()
-            when {
-                validadora == null -> throw BusinessException("Houve um problema com a API validadora")
-                !validadora.podeTransferir -> throw UsuarioNaoAutorizadoException()
-                validadora.podeTransferir -> return
+            when(validadora.podeTransferir) {
+                false -> throw UsuarioNaoAutorizadoException("Serviço não autorizado")
+                true -> return
             }
         } catch (ex: BadRequest) {
             throw BusinessException()
         } catch (ex: Exception) {
-            throw ServicoIndisponivelException()
+            throw ex
         }
     }
 }
