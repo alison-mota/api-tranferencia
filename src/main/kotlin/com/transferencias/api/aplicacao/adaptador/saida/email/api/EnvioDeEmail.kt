@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping
 
 @FeignClient(
     name = "EnvioDeEmail",
-    url = "\${api.validadora-e-email}",
+    url = "\${api.externa.email}",
     configuration = [EnvioDeEmailConfig::class]
 )
 interface EnvioDeEmail {

@@ -21,7 +21,7 @@ class TransferenciaController(
     @PostMapping
     fun executa(
         @Valid @RequestBody transferenciaRequest: TransferenciaRequest,
-        @RequestHeader authorization: String
+        @RequestHeader(required = true) authorization: String
     ): ResponseEntity<Any> {
         logger.info("[START - 01] Iniciando transferencia entre contas")
 
