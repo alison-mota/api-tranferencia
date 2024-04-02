@@ -1,6 +1,9 @@
 package com.transferencias.api.auxiliares.interceptador
 
 import com.transferencias.api.auxiliares.excecoes.*
+import feign.FeignException
+import feign.FeignException.BadRequest
+import feign.FeignException.InternalServerError
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -60,9 +63,27 @@ class ValidationErrorHandler {
         return validationErrors
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BadRequest::class)
+    fun handleGenericException(exception: BadRequest): ValidationErrorsOutputDto {
+        val validationErrors = ValidationErrorsOutputDto()
+        validationErrors.addError(exception.message)
+
+        return validationErrors
+    }
+
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     @ExceptionHandler(ServicoIndisponivelException::class)
     fun handleGenericException(exception: ServicoIndisponivelException): ValidationErrorsOutputDto {
+        val validationErrors = ValidationErrorsOutputDto()
+        validationErrors.addError(exception.message)
+
+        return validationErrors
+    }
+
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    @ExceptionHandler(InternalServerError::class)
+    fun handleGenericException(exception: InternalServerError): ValidationErrorsOutputDto {
         val validationErrors = ValidationErrorsOutputDto()
         validationErrors.addError(exception.message)
 

@@ -29,6 +29,6 @@ class OrquestradorDeTransferencias(
         validadorDeTransacao.validacoesFinais(dadosIniciaisDaOperacao, operacaoRealizada)
 
         usuarioRepository.saveAll(listOf(operacaoRealizada.first.usuario, operacaoRealizada.second.usuario))
-        logger.info("[END - 04] Transferencia entre contas realizada")
+        logger.info("[END - 04] Transferencia entre contas concluída")
     }
 }
