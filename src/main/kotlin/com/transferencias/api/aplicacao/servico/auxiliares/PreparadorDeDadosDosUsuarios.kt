@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class LocalizadorDeUsuarios(
+class PreparadorDeDadosDosUsuarios(
     private val usuarioRepository: UsuarioRepository,
     private val jwtUtils: JwtUtils
 ) {
