@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping
 
 @FeignClient(
     name = "ApiValidadora",
-    url = "\${api.validadora-e-email}",
+    url = "\${api.externa.validadora}",
     configuration = [EnvioDeEmailConfig::class]
 )
 interface ApiValidadora {
