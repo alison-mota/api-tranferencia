@@ -80,7 +80,7 @@ class ValidationErrorHandler {
     @ExceptionHandler(BadRequest::class)
     fun handleGenericException(exception: BadRequest): ValidationErrorsOutputDto {
         val validationErrors = ValidationErrorsOutputDto()
-        validationErrors.addError(exception.message)
+        validationErrors.addError("Houve um problema ao tentar validar a transferência")
 
         return validationErrors
     }
@@ -107,7 +107,7 @@ class ValidationErrorHandler {
     @ExceptionHandler(InternalServerError::class)
     fun handleGenericException(exception: InternalServerError): ValidationErrorsOutputDto {
         val validationErrors = ValidationErrorsOutputDto()
-        validationErrors.addError(exception.message)
+        validationErrors.addError("O serviço está temporariamente indisponível, tente novamente mais tarde")
 
         return validationErrors
     }
