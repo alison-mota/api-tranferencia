@@ -1,6 +1,8 @@
 package com.transferencias.api.helpers
 
 import com.transferencias.api.aplicacao.adaptador.entrada.dto.TransferenciaRequest
+import com.transferencias.api.aplicacao.dominio.DadosDestino
+import com.transferencias.api.aplicacao.dominio.DadosOrigem
 import com.transferencias.api.aplicacao.dominio.entidade.Usuario
 import java.math.BigDecimal
 
@@ -17,6 +19,16 @@ object Dummy {
         valorDaTransferencia: BigDecimal = BigDecimal.TEN,
         beneficiarioId: Long = 2
     ) = TransferenciaRequest(valorDaTransferencia, beneficiarioId)
+
+    fun criaDadosIniciaisDaTransacao() = Pair(
+        DadosOrigem(
+            usuario = criaUsuarioComum(),
+            valorDaTransferencia = BigDecimal.valueOf(1000)
+        ),
+        DadosDestino(
+            usuario = criaUsuarioLojista()
+        )
+    )
 
     fun criaUsuarioComum(
         nome: String = "Joao",
