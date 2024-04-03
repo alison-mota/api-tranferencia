@@ -105,7 +105,15 @@
             <artifactId>kotlinx-coroutines-core-jvm</artifactId>
             <version>1.5.0</version>
         </dependency>
+
+        <!--Documentacao-->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.5.0</version>
+        </dependency>
     </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -150,20 +158,6 @@
                         <version>${kotlin.version}</version>
                     </dependency>
                 </dependencies>
-                <executions>
-                    <execution>
-                        <id>compile</id>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>test-compile</id>
-                        <goals>
-                            <goal>test-compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

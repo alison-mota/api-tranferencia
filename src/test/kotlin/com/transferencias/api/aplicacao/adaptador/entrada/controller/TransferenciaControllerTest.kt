@@ -79,11 +79,11 @@ class TransferenciaControllerTest {
             val usuarioDestino = usuarioRepository.getReferenceById(2)
 
             assertEquals(
-                BigDecimal(50.50).minus(transferenciaRequest.valor).setScale(2, RoundingMode.HALF_UP),
+                BigDecimal(50.50).minus(transferenciaRequest.value).setScale(2, RoundingMode.HALF_UP),
                 usuarioOrigem.carteira.getSaldoAtual()
             )
             assertEquals(
-                BigDecimal(2000).plus(transferenciaRequest.valor).setScale(2, RoundingMode.HALF_UP),
+                BigDecimal(2000).plus(transferenciaRequest.value).setScale(2, RoundingMode.HALF_UP),
                 usuarioDestino.carteira.getSaldoAtual()
             )
 

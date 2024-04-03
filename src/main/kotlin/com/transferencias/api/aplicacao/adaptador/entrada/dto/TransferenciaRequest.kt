@@ -1,5 +1,6 @@
 package com.transferencias.api.aplicacao.adaptador.entrada.dto
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Positive
 import java.math.BigDecimal
@@ -7,7 +8,8 @@ import java.math.BigDecimal
 data class TransferenciaRequest(
     @NotNull
     @Positive
-    val valor: BigDecimal,
+    val value: BigDecimal,
     @NotNull
-    val beneficiario: Long
+    @JsonProperty("payee_id")
+    val payeeId: Long
 )
