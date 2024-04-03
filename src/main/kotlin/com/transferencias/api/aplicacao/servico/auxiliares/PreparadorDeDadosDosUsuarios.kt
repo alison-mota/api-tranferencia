@@ -25,10 +25,10 @@ class PreparadorDeDadosDosUsuarios(
 
         val usuarioDeOrigem = usuarioRepository
             .getReferenceById(usuarioDeOrigemId)
-            .paraOrigem(transferenciaRequest.valor)
+            .paraOrigem(transferenciaRequest.value)
 
         val usuarioDeDestino = usuarioRepository
-            .getReferenceById(transferenciaRequest.beneficiario)
+            .getReferenceById(transferenciaRequest.payeeId)
             .paraDestino()
 
         return Pair(usuarioDeOrigem, usuarioDeDestino).also {
