@@ -12,7 +12,7 @@ Esta API permite realizar transferências de valores entre contas bancárias de 
 - Endpoint: /usuario
 - Método: POST
 - Requisição:
-  - Body: JSON com os dados da transferência (valor e id do usuario de destino).
+  - Body: JSON com os dados da transferência (valor da transação e id do usuario de destino).
   - Headers:
     - Authorization: Bearer - token de autenticação.
 - Resposta:
@@ -31,7 +31,7 @@ JSON
 ``
 {
 "valor": 100.00,
-"beneficiario": "2"
+"beneficiario": 2
 }
 ``
 
